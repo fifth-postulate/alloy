@@ -1,2 +1,2 @@
-# Smorgasbord of Paradigms
-## A pocketknife of programming
+# Alloy
+## An amalgamation of model and design
