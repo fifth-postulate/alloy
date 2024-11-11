@@ -26,6 +26,9 @@ function incrementor() {
 
 sig Incrementor {
   var tmp: lone Int,
+
+  -- In this version of the model, "pc" (program counter) indicates
+  -- the line we are on, so it indicates the statement we are *about* to execute.
   var pc: lone Pc,
 }
 
@@ -92,6 +95,6 @@ check {
   {
     #Incrementor > 1
   } => {  
-    eventually no Incrementor.pc => Register.value = #Incrementor
+    eventually no alive => Register.value = #Incrementor
   }
 }
