@@ -1,0 +1,743 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Alloy</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title.html">Title</a></li><li class="chapter-item expanded affix "><a href="expectations.html">What to expect</a></li><li class="chapter-item expanded affix "><li class="part-title">Introduction</li><li class="chapter-item expanded "><a href="introduction/origin.html"><strong aria-hidden="true">1.</strong> Origin</a></li><li class="chapter-item expanded "><a href="introduction/fascilitators.html"><strong aria-hidden="true">2.</strong> Facilitators</a></li><li class="chapter-item expanded "><a href="introduction/organisation.html"><strong aria-hidden="true">3.</strong> Organization</a></li><li class="chapter-item expanded affix "><li class="part-title">Alloy</li><li class="chapter-item expanded "><a href="#.html"><strong aria-hidden="true">4.</strong> First Steps</a></li><li class="chapter-item expanded "><a href="#.html"><strong aria-hidden="true">5.</strong> Exploring the analyzer</a></li><li class="chapter-item expanded affix "><li class="part-title">Analyzing structure and operations</li><li class="chapter-item expanded "><a href="#.html"><strong aria-hidden="true">6.</strong> An Address Book with aliases</a></li><li class="chapter-item expanded affix "><li class="part-title">Time</li><li class="chapter-item expanded "><a href="time/alloy-and-time.html"><strong aria-hidden="true">7.</strong> Alloy and Time</a></li><li class="chapter-item expanded "><a href="time/challenge-fourteen.html"><strong aria-hidden="true">8.</strong> Challenge Fourteen</a></li><li class="chapter-item expanded "><a href="time/edentifier.html"><strong aria-hidden="true">9.</strong> The e.dentifier</a></li><li class="chapter-item expanded "><a href="#.html"><strong aria-hidden="true">10.</strong> Incrementing a register</a></li><li class="chapter-item expanded "><a href="#.html"><strong aria-hidden="true">11.</strong> Another way to write Frame Conditions</a></li><li class="chapter-item expanded affix "><li class="part-title">Appendices</li><li class="chapter-item expanded "><a href="appendix/sources.html"><strong aria-hidden="true">12.</strong> Sources</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Alloy</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="alloy"><a class="header" href="#alloy">Alloy</a></h1>
+<h2 id="an-amalgamation-of-model-and-design"><a class="header" href="#an-amalgamation-of-model-and-design">An amalgamation of model and design</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="what-to-expect"><a class="header" href="#what-to-expect">What to expect</a></h1>
+<p>This book is divided into the following parts</p>
+<ul>
+<li>Introduction</li>
+<li>Appendices</li>
+</ul>
+<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<p>In the introduction part we will set the scene and talk about the our goals.</p>
+<h2 id="appendices"><a class="header" href="#appendices">Appendices</a></h2>
+<p>The appendices are there to provide context that are not naturally placed within
+the guide. They can be used as a resource for future studies and sometimes
+inspiration.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="origin"><a class="header" href="#origin">Origin</a></h1>
+<p>This workshop originated after an observation. Software development toots the
+horn of chosing the right tool for the job. But all to often development is
+jumped started by creating a project in their favorite, general purpose,
+programming language.
+Each problem is a challenge in modelling and design, followed by expressing the
+model and the accompanying algorithms in code.</p>
+<p>Although it seems that the modern approach eskews upfront modeling, we feel 
+that it still has a place in the software development process. Especially
+when it allows to gain rapid feedback about the implication of various design
+decisions.</p>
+<p>Alloy is such a tool that allows to collect feedback in an early phase,
+without the substantial investment in more elaborate formal verification
+methods.</p>
+<p>We like to take you on a journey to convince you of the insight.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="fascilitators"><a class="header" href="#fascilitators">Fascilitators</a></h1>
+<p>The <em>Smorgasbord of Paradigms</em> workshop is brought to you by the lovely Rico
+and Daan.</p>
+<p><img src="https://fifth-postulate.nl/smorgasbord-of-paradigms/image/rico-daan.jpeg" alt="Rico &amp; Daan enjoying a game of three-way chess; Picture by Felienne" /></p>
+<h2 id="rico-hermans"><a class="header" href="#rico-hermans">Rico Hermans</a></h2>
+<p>Rico is a software engineer working for Amazon and applies his knowledge to
+easy the use of Amazons cloud services.</p>
+<h2 id="daan-van-berkel"><a class="header" href="#daan-van-berkel">Daan van Berkel</a></h2>
+<p>Daan is a solution architect at Alliander, a utilities company responsible for
+a large part of the Dutch electrical and gas networks.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="organization"><a class="header" href="#organization">Organization</a></h1>
+<p>The material is organized around different concepts. Each concept has its own section.
+It is intended to be self-contained and should be allow for working through in
+any order.</p>
+<p>Within a concept you should start at the beginning and work through the material
+until:</p>
+<ol>
+<li>You are confident that you have an good understanding of the concept,</li>
+<li>You are bored and want something new to learn.</li>
+</ol>
+<p>Please don't forget that although you are learning valuable tool, you learn the
+best when you are having fun. If you lost concentration, or otherwise don't
+feel engaged; stop, don't worry, take a break and come back to it at a later
+point in time.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="another-way-to-write-frame-conditions"><a class="header" href="#another-way-to-write-frame-conditions">Another way to write Frame Conditions</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="another-way-to-write-frame-conditions-1"><a class="header" href="#another-way-to-write-frame-conditions-1">Another way to write Frame Conditions</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="another-way-to-write-frame-conditions-2"><a class="header" href="#another-way-to-write-frame-conditions-2">Another way to write Frame Conditions</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="alloy-and-time"><a class="header" href="#alloy-and-time">Alloy and Time</a></h1>
+<p>Since version 6, Alloy can also express state evolving over time.</p>
+<p>Explain:</p>
+<ul>
+<li><code>var</code></li>
+<li><code>x</code> and <code>x'</code></li>
+<li>Regular <code>fact</code>s are now initialization, <code>always</code> facts represent invariants</li>
+<li><code>always</code>/<code>eventually</code></li>
+</ul>
+<h2 id="checking-time"><a class="header" href="#checking-time">Checking time</a></h2>
+<p>Run: put an <code>and</code> of what you would like to see. Check that the specification is
+satisfiable.</p>
+<p>The default scope is 10 time steps. You can change it by writing something like
+<code>run { ... } for 10..20 steps</code>.</p>
+<p>Check: put an implication to check for termination.</p>
+<h2 id="the-visualizer-and-time"><a class="header" href="#the-visualizer-and-time">The visualizer and Time</a></h2>
+<p>When you run a model, Alloy will find a <em>trace</em>, which is a sequence of
+states that evolve over time. At the top of the visualizer, you will
+see the sequence of states in the trace and you can use the arrow
+buttons to step through it.</p>
+<p>Notice that every trace ends in a loop, which indicates that it goes back to a
+previous state. This is called a <em>lasso trace</em>. That means that a trace has a
+<em>first</em> state, but it doesn't have a <em>last</em> state. This property makes it so that temporal
+formulas are always valid; if we didn't have infinite traces, what would the
+expression <code>x'</code> even refer to in the last state?</p>
+<p>You normally don't have to worry about lassos, as long as you make sure that
+your model doesn't get &quot;stuck&quot;: if there's nothing interesting progress to make
+in your model anymore, you at least have to model that the next state is equal
+to the previous state, forever.</p>
+<p>You will see that all traces</p>
+<ul>
+<li>The visualizer buttons and progression</li>
+</ul>
+<h2 id="frame-conditions"><a class="header" href="#frame-conditions">Frame conditions</a></h2>
+<p>(Trivial model here with 2 <code>var</code>s, leave out frame conditions)</p>
+<p><strong>EXERCISE</strong>: Run the above program. What happened? Why did that happen?</p>
+<p>A light touch of frame conditions.</p>
+<p>Frame conditions can be written in a couple of different styles. We will see
+a couple of different styles later.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="challenge-fourteen"><a class="header" href="#challenge-fourteen">Challenge Fourteen</a></h1>
+<p><a href="https://wiki.c2.com/?ExtremeProgrammingChallengeFourteen">Challenge Fourteen</a>
+was one of the challenges to determine whether the methods of Extreme
+Programming (XP) and Test Driven Design (TDD) could also be applied to
+concurrency problems.</p>
+<p>In Challenge Fourteen, Tom Cargill posited some code that had a known bug and
+challenged people to expose the bug by writing unit tests. It took 2 weeks and a
+test setup with 11 threads, running the test 250 times to finally expose the
+bug.</p>
+<p>Concurrency problems are notoriously hard to test for. But let's see if we can
+use Alloy to model this problem and find the problem in less than 2 weeks!</p>
+<h2 id="the-code"><a class="header" href="#the-code">The code</a></h2>
+<p>Here is the code that Tom Cargill provided, modeling a concurrent queue of
+finite size, implemented as a ring buffer.</p>
+<p>If a thread ties to read from an empty queue it waits until an element is added
+to the queue, and if a thread tries to write to a full queue it waits until
+there is room in the queue again.</p>
+<p>Here is the code:</p>
+<pre><code class="language-java">class BoundedBuffer {
+    private Object[] buffer = new Object[4];
+    private int putAt, takeAt, occupied;
+
+    synchronized void put(Object x) throws InterruptedException {
+        while (occupied == buffer.length) {
+            wait();
+        }
+        notify();
+
+        ++occupied;
+        putAt %= buffer.length;
+        buffer[putAt++] = x;
+    }
+
+    synchronized Object take() throws InterruptedException {
+        while (occupied == 0) {
+            wait();
+        }
+        notify();
+
+        --occupied;
+        takeAt %= buffer.length;
+        return buffer[takeAt++];
+    }
+}
+</code></pre>
+<p>If you are an experienced Java programmer, you may be able to spot the bug
+straight away. But let's go through the exercise of modeling this problem in
+Alloy and see if we can find the bug that way.</p>
+<h3 id="what-does-this-code-mean"><a class="header" href="#what-does-this-code-mean">What does this code mean?</a></h3>
+<p>If you are not familiar with Java and its concurrency primitives, here is a
+small recap of the most important concepts:</p>
+<ul>
+<li>Every Java object implicitly has an associated mutex and condition flag.</li>
+<li><code>synchronized</code> makes sure that the method runs atomically: this implicitly
+acquires and releases the mutex, so that no 2 <code>synchronized</code> methods of the same
+object will execute at the same time.</li>
+<li><code>wait()</code> puts the current thread to sleep and releases the mutex that
+<code>synchronized</code> implicitly holds, so that another thread can acquire it.  It is
+common to put the <code>wait()</code> inside a loop.</li>
+<li><code>notify()</code> wakes up one of the waiting threads, so that it can try acquiring
+the mutex again.</li>
+</ul>
+<h2 id="translating-to-alloy"><a class="header" href="#translating-to-alloy">Translating to Alloy</a></h2>
+<p>We're going to translate this program into Alloy. First: the queue buffer.
+We don't care about the values in the buffer, or exactly where they go (yet).
+If we wanted to confirm that we read items from the queue in the same order
+as we put them, we would model those parts as well, but for now we will ignore them.</p>
+<p>Here is the start of the buffer:</p>
+<pre><code class="language-alloy">one sig Buffer {
+  -- Give the buffer a capacity, and an occupancy level that can change over time
+  // ...
+}
+
+fact {
+  -- The buffer has a nonzero capacity, and starts out empty
+  // ...
+}
+</code></pre>
+<p><strong>EXERCISE</strong>: write the state relations of the <code>Buffer</code> sig and their facts.</p>
+<p>Next, the threads that will act on our buffer:</p>
+<pre><code class="language-alloy">abstract sig Thread {
+}
+sig Writer extends Thread {
+}
+sig Reader extends Thread {
+}
+
+-- True if the given thread is sleeping
+-- We will use this to test our code.
+pred isSleeping[t: Thread] {
+  // ...
+}
+
+-- Assert that all threads are awake. This will be our
+-- initialization condition later.
+pred allThreadsAwake {
+  no t: Thread | t.isSleeping
+}
+</code></pre>
+<p>We need to keep track of which threads are awake and which are asleep.</p>
+<p><strong>EXERCISE</strong>: add relation to keep track of which threads are awake and which
+are asleep at a point in time.  You could make a property mapping a <code>Thread</code> to
+a <code>Bool</code>, or you could make a sig for global variables that holds a set of
+<code>Thread</code>s.</p>
+<p>We are now going to implement the <code>wait()</code> and <code>notify()</code> primitives:</p>
+<pre><code class="language-alloy">-- Put a single thread to sleep
+pred wait[t: Thread] {
+  // ...
+}
+
+-- If any threads are sleeping, wake one
+pred notify {
+  // ...
+}
+
+-- Testing the wait predicate
+run WaitIsSatisfiable { all t: Thread | t.wait }
+check TestWait {
+  -- After we call wait on a thread, it should be asleep the next tick
+  all t: Thread | t.wait =&gt; after t.isSleeping
+}
+
+-- Testing the notify predicate
+run NotifyIsSatisfiable { notify }
+check TestNotify {
+  -- After calling notify...
+  notify =&gt; {
+    -- All threads that are still sleeping were at least sleeping before notify
+    -- was called.
+    all t: Thread | (after t.isSleeping) =&gt; t.isSleeping
+
+    -- If there are any threads, then at least one of them is awake.
+    some Thread =&gt; after some t: Thread | not t.isSleeping
+  }
+}
+</code></pre>
+<p>Instead of immediately declaring it as an initialization <code>fact</code>, we made
+<code>allThreadsAwake</code> a separate predicate. That way, we can avoid calling it in our
+tests of <code>wait</code> and <code>notify</code>, and explore their behavior in a state of mixed
+sleeping and awake threads without having to do additional state manipulation.</p>
+<p><strong>EXERCISE</strong>: implement the predicates above. They will involve a
+time step, so you will prime a variable (<code>myvar'</code>) to update the value of some
+relation. Use the provided commands to check your implementation. Did you
+see any unexpected behavior? (Remember that if you don't constrain the
+next state of a variable, the analyzer is allowed to pick any value!)</p>
+<h2 id="what-do-we-want-to-check"><a class="header" href="#what-do-we-want-to-check">What do we want to check?</a></h2>
+<p>We are now going to model the <code>put</code> and <code>take</code> methods. Here is the skeleton:</p>
+<pre><code class="language-alloy">-- Add to the buffer's occupancy if it is not full yet, otherwise sleep.
+pred put[w: Writer] {
+  (Buffer.occupied = Buffer.capacity) implies {
+    // ...
+  } else {
+    // ...
+  }
+}
+
+-- Reduce one from the buffer's occupancy if it is nonempty, otherwise sleep
+pred take[r: Reader] {
+  (Buffer.occupied = 0) implies {
+    // ...
+  } else {
+    // ...
+  }
+}
+
+-- Call put or take as appropriate given a Thread
+pred stepThread[t: Thread] {
+  t in Writer =&gt; put[t]
+  t in Reader =&gt; take[t]
+}
+
+-- Take an arbitrary awake thread, and make it take a step
+pred stepAnyThread {
+  (some t: Thread | not t.isSleeping) implies {
+    some t: not t.isSleeping =&gt; stepThread[t]
+  } else {
+    -- If no threads are awake no progress can be made anymore.
+    -- We need an explicit frame condition to say that in the next state all
+    -- threads are still sleeping and also our buffer hasn't changed.
+    after all t: Thread | t.isSleeping
+
+    -- If you picked a different variable name here you need to change this
+    Buffer.occupied' = Buffer.occupied
+  }
+}
+</code></pre>
+<p>Fortunately, the predicates can be quite straightforward: as long as we keep
+calling <code>put</code> and <code>take</code> infinitely in a loop, the <code>synchronized/while/wait</code>
+ensures that the entire function will execute in one indivisible step if the
+condition of the <code>while</code> is satisfied.</p>
+<p>In the next section, we will look at some processes that don't execute in
+a single indivisible step, which need some more bookkeeping.</p>
+<p><strong>EXERCISE</strong>: implement the <code>put</code> and <code>take</code> predicates. Watch out for
+the integer addition! You need to write <code>plus[x, y]</code> (or <code>x.plus[y]</code>),
+because <code>x + y</code> means set union, not addition!</p>
+<h2 id="finding-the-bug"><a class="header" href="#finding-the-bug">Finding the bug</a></h2>
+<p>We have now implemented everything! It's time to see if we can find the bug.</p>
+<p>First, let's see if we can generate some interesting traces to see if
+everything works. We'll put the entire setup of our spec into a <code>pred</code> so
+that we can first <code>run</code> it, and then re-use it in a <code>check</code>.</p>
+<pre><code class="language-alloy">pred TraceSomeThreads {
+  -- Have both types of threads
+  some Reader
+  some Writer
+
+  -- All threads start out awake
+  allThreadsAwake
+
+  -- At every time step, exactly one thread makes progress
+  always stepAnyThread
+}
+run TraceSomeThreads
+</code></pre>
+<p>If that worked, we are now ready to go check for the bug:</p>
+<pre><code class="language-alloy">check FindTheBug {
+  TraceSomeThreads =&gt; {
+    -- Write some invariants that we want this system to satisfy.
+    always // ...
+  }
+}
+</code></pre>
+<p><strong>EXERCISE</strong>: write one or more invariants in the <code>check</code> block to make sure our
+system satisfies those invariants at every point in time, then run Alloy to see
+if it satisfies them. If you're unsure about what to check for, consider this:
+what do we definitely <em>not</em> want to happen in a system with multiple threads?</p>
+<p>In our case, the counterexample took 8 time steps to surface a violation of the
+invariant. It involves 2 readers and 1 writer.</p>
+<p><strong>EXERCISE</strong>: what happened? Step throug the counterexample, observe the state
+changes at every step, and describe what happened. You can play a little with
+the visualizer settings to make it easier to read.</p>
+<h2 id="fixing-the-bug"><a class="header" href="#fixing-the-bug">Fixing the bug</a></h2>
+<p>Now that we have found the bug, the next question is how to fix it. Maybe you
+have a good idea, or you know the pattern already.</p>
+<p>It turns out that Java objects also have another method to wake threads:</p>
+<pre><code>public void notifyAll()
+    Wakes up all threads that are waiting on this object's monitor.
+</code></pre>
+<pre><code class="language-alloy">-- Wake all threads that are sleeping
+pred notifyAll {
+  // ...
+}
+</code></pre>
+<p><strong>EXERCISE</strong>: implement <code>notifyAll</code>, then update the code to use the new
+*predicate, and confirm that
+it fixes the bug (or at least, that the bug doesn't surface in 10 time steps and
+with however many objects you checked!). Did you need to change all occurrences
+of <code>notify</code>, or can you get away with just changing one? What would you do in
+practice?</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="the-edentifier"><a class="header" href="#the-edentifier">The e.dentifier</a></h1>
+<p>The e.dentifier2 is a smartcard reader for Internet banking, used by the Dutch
+bank ABN AMRO.</p>
+<p><img src="time/edentifier.jpg" alt="e.dentifier" /></p>
+<p>You may have seen these types of devices before. This particular device connects
+to your PC over USB, and responds to commands both from the user and the PC.</p>
+<p>The flow is that a user types their PIN number, which is validated by the smart
+card and which unlocks the smart card. The PC then sends the reader some data
+representing a transaction, which it displays to the user. The user then pushes
+the &quot;OK&quot; button, after which it gets the smart card to generate a signature to
+confirm the displayed transaction (a &quot;cryptogram&quot; in this protocol). The PC then
+sends that cryptogram to the banking server to prove that the user confirmed the
+transaction.</p>
+<p><img src="time/edentifier-connection.png" alt="E.dentifier connections" /></p>
+<p>All of this work, including the reverse engineering of the state machine of
+the e.dentifier, is courtesy of the <a href="http://www.cs.ru.nl/~joeri/talks/ictopen2012.pdf">Radboud Universiteit Nijmegen</a>.</p>
+<h2 id="modeling-the-problem"><a class="header" href="#modeling-the-problem">Modeling the problem</a></h2>
+<p>There are a number of ways in which we could model this problem. We could model
+the individual behavior of the reader and the smart card as Threads or Actors,
+like we did for <a href="time/challenge-fourteen.html">Challenge Fourteen</a>.</p>
+<p>In this case we're going to do something a bit simpler: the team from Radboud
+Universiteit has figured out the state machine of the combined system of Reader
+and Smart Card by automatically probing it. We are going to model the state machine:</p>
+<p><img src="time/edentifier-statemachine.png" alt="State Machine" /></p>
+<h2 id="translating-to-alloy-1"><a class="header" href="#translating-to-alloy-1">Translating to Alloy</a></h2>
+<p>Let's put down some data structures to hold the state of our system:</p>
+<pre><code class="language-alloy">-- The states of the E.dentifier
+enum State { Ready, PinVerified, WaitForConfirmation }
+-- The events that can happen, both from the Human as well as the PC
+enum Event { HumanEnterPin, HumanPressOk, PcDisplayData, PcGenCryptogram }
+-- The signals that the E.dentifier sends to the PC
+enum Output { Ok, Error, Timeout, Cryptogram }
+
+-- One global object to hold all states
+one sig Edentifier {
+  var state: State,
+  var event: Event,
+  var output: Output,
+}
+</code></pre>
+<p>The next question is how we are going to model the state transition table.
+A state transition table has 3 or 4 columns:</p>
+<ul>
+<li>The current state</li>
+<li>The input (event)</li>
+<li>The next state</li>
+<li>The output (signal to the PC)</li>
+</ul>
+<p><strong>EXERCISE</strong>: think about how you would represent the state transition table
+in Alloy. There are a couple of different ways you could do it: you could write
+one or more <code>pred</code>s to represent valid combinations of these 4 elements, or a
+<code>fun</code> that represents a set of 4-tuples. Write a couple of transitions in your
+mechanism of choice.</p>
+<hr />
+<p>We ended up representing the transitions as a giant table of 4-tuples. This is
+an elegant way of representing the table, but it has one downside: all
+0-argument functions will automatically be represented in the visualizer, so we
+will see a bunch of lines when we visualize the model! In the <em>Theme</em> settings
+of the visualizer, we will have to turn off visualizing <code>$transitions</code>.</p>
+<pre><code class="language-alloy">fun transitions: set State -&gt; Event -&gt; State -&gt; Output {
+   Ready -&gt; PcDisplayData -&gt; Ready -&gt; Error
++ Ready -&gt; PcGenCryptogram -&gt; Ready -&gt; Error
++ Ready -&gt; HumanPressOk -&gt; Ready -&gt; Timeout
++ Ready -&gt; HumanEnterPin -&gt; PinVerified -&gt; Ok
++ PinVerified -&gt; PcDisplayData -&gt; WaitForConfirmation -&gt; Ok
++ PinVerified -&gt; HumanEnterPin -&gt; PinVerified -&gt; Ok
++ PinVerified -&gt; HumanPressOk -&gt; PinVerified -&gt; Timeout
++ PinVerified -&gt; PcGenCryptogram -&gt; Ready -&gt; Cryptogram
++ WaitForConfirmation -&gt; HumanEnterPin -&gt; PinVerified -&gt; Ok
++ WaitForConfirmation -&gt; HumanPressOk -&gt; PinVerified -&gt; Ok
++ WaitForConfirmation -&gt; PcDisplayData -&gt; WaitForConfirmation -&gt; Error
++ WaitForConfirmation -&gt; PcGenCryptogram-&gt; WaitForConfirmation -&gt; Error
+}
+
+-- Check that there is a row in the table for every combination of
+-- State and Event
+check TransitionsTableIsComplete {
+  // ...
+}
+</code></pre>
+<p><strong>EXERCISE</strong>: it is a good exercise to add validations into your model
+to make sure you didn't forget anything. Complete the <code>check</code> above
+that ensures that the table is complete; that is, there is a row in
+it for every combination of state and input.</p>
+<h2 id="running-the-state-machine"><a class="header" href="#running-the-state-machine">Running the state machine</a></h2>
+<p>Let's write some predicates that we'll use to run the state machine:</p>
+<pre><code class="language-alloy">-- Set up the initial state of the state machine
+pred init {
+  // ...
+}
+
+-- Make the state machine perform one step according its current state and
+-- current event.
+pred step {
+  // ...
+}
+
+-- Running the state machine means setting it up and then performing a step
+-- at every time step.
+pred runStateMachine {
+  init
+  always step
+}
+
+-- Test the predicates above. Run the state machine, and expect to find it
+-- in some particular state at some point
+run {
+  runStateMachine
+  eventually { Edentifier.state = WaitForConfirmation }
+}
+</code></pre>
+<p><strong>EXERCISE</strong>: complete the <code>init</code> and <code>step</code> predicates above to initialize
+the state machine and make it perform a step, respectively. Variables you don't
+constrain will vary across all possible values, which can be useful! Decide
+on what you want <code>output</code> to represent: the response to the <em>current</em> event,
+or the response to <em>previous</em> time step's event.</p>
+<h2 id="checking-for-useful-properties"><a class="header" href="#checking-for-useful-properties">Checking for useful properties</a></h2>
+<p>A desirable behavior of a smart card reader like this would seem to be that
+no signing code can be generated unless a user enters their PIN code, sees
+the transaction and presses the OK button.</p>
+<pre><code class="language-alloy">check UserConfirmationIsRequiredForAllCryptograms {
+  runStateMachine =&gt; {
+    // ...
+  }
+}
+</code></pre>
+<p><strong>EXERCISE</strong>*: complete the condition above which checks that the user
+is involved in the generation of cryptograms. Try checking the system, does it
+satsify the requirement? Think about the time operators you want to use here.
+Here are your choices:</p>
+<ul>
+<li>Future time operators
+<ul>
+<li><code>always P</code>: P is true in the current and all future states</li>
+<li><code>eventually P</code>: P is true in at least one current or future state</li>
+<li><code>after P</code>: P is true in the next state</li>
+<li><code>P until Q</code>: P is true zero or more times and then Q is true</li>
+<li><code>Q releases P</code>: P can only be false after Q is true (maybe Q never happens)</li>
+</ul>
+</li>
+<li>Past time operators
+<ul>
+<li><code>historically P</code>: P is true in the current and all past states</li>
+<li><code>once P</code>: P is true in at least one current or past state</li>
+<li><code>before P</code>: P is true in the previous state</li>
+<li><code>P since Q</code>: Q was true once and then P was true until the current state</li>
+<li><code>Q triggered P</code>: ...</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>The e.dentifier is vulnerable to a hijacked PC: if the PC software sends a
+<code>PcGenCryptogram</code> event after the smart card has been unlocked, the display and
+confirmation can be bypassed.</p>
+<p><strong>EXERCISE</strong>: if you want, design a state machine that prevents this behavior.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="another-way-to-write-frame-conditions-3"><a class="header" href="#another-way-to-write-frame-conditions-3">Another way to write Frame Conditions</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="another-way-to-write-frame-conditions-4"><a class="header" href="#another-way-to-write-frame-conditions-4">Another way to write Frame Conditions</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="sources"><a class="header" href="#sources">Sources</a></h1>
+<p>The sources for this guide, its examples and references can be found at <a href="https://github.com/fifth-postulate/smorgasbord-of-paradigms">the project repository</a>.</p>
+<p>It also holds <a href="https://github.com/fifth-postulate/smorgasbord-of-paradigms/releases">a downloadable release</a>; a package of all aforementioned items. </p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            MathJax.Hub.Register.StartupHook('End', function() {
+                window.setTimeout(window.print, 100);
+            });
+        });
+        </script>
+
+    </div>
+    </body>
+</html>

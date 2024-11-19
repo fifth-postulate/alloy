@@ -1,0 +1,399 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>The e.dentifier - Alloy</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../title.html">Title</a></li><li class="chapter-item expanded affix "><a href="../expectations.html">What to expect</a></li><li class="chapter-item expanded affix "><li class="part-title">Introduction</li><li class="chapter-item expanded "><a href="../introduction/origin.html"><strong aria-hidden="true">1.</strong> Origin</a></li><li class="chapter-item expanded "><a href="../introduction/fascilitators.html"><strong aria-hidden="true">2.</strong> Facilitators</a></li><li class="chapter-item expanded "><a href="../introduction/organisation.html"><strong aria-hidden="true">3.</strong> Organization</a></li><li class="chapter-item expanded affix "><li class="part-title">Alloy</li><li class="chapter-item expanded "><a href="../#.html"><strong aria-hidden="true">4.</strong> First Steps</a></li><li class="chapter-item expanded "><a href="../#.html"><strong aria-hidden="true">5.</strong> Exploring the analyzer</a></li><li class="chapter-item expanded affix "><li class="part-title">Analyzing structure and operations</li><li class="chapter-item expanded "><a href="../#.html"><strong aria-hidden="true">6.</strong> An Address Book with aliases</a></li><li class="chapter-item expanded affix "><li class="part-title">Time</li><li class="chapter-item expanded "><a href="../time/alloy-and-time.html"><strong aria-hidden="true">7.</strong> Alloy and Time</a></li><li class="chapter-item expanded "><a href="../time/challenge-fourteen.html"><strong aria-hidden="true">8.</strong> Challenge Fourteen</a></li><li class="chapter-item expanded "><a href="../time/edentifier.html" class="active"><strong aria-hidden="true">9.</strong> The e.dentifier</a></li><li class="chapter-item expanded "><a href="../#.html"><strong aria-hidden="true">10.</strong> Incrementing a register</a></li><li class="chapter-item expanded "><a href="../#.html"><strong aria-hidden="true">11.</strong> Another way to write Frame Conditions</a></li><li class="chapter-item expanded affix "><li class="part-title">Appendices</li><li class="chapter-item expanded "><a href="../appendix/sources.html"><strong aria-hidden="true">12.</strong> Sources</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Alloy</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="the-edentifier"><a class="header" href="#the-edentifier">The e.dentifier</a></h1>
+<p>The e.dentifier2 is a smartcard reader for Internet banking, used by the Dutch
+bank ABN AMRO.</p>
+<p><img src="edentifier.jpg" alt="e.dentifier" /></p>
+<p>You may have seen these types of devices before. This particular device connects
+to your PC over USB, and responds to commands both from the user and the PC.</p>
+<p>The flow is that a user types their PIN number, which is validated by the smart
+card and which unlocks the smart card. The PC then sends the reader some data
+representing a transaction, which it displays to the user. The user then pushes
+the &quot;OK&quot; button, after which it gets the smart card to generate a signature to
+confirm the displayed transaction (a &quot;cryptogram&quot; in this protocol). The PC then
+sends that cryptogram to the banking server to prove that the user confirmed the
+transaction.</p>
+<p><img src="edentifier-connection.png" alt="E.dentifier connections" /></p>
+<p>All of this work, including the reverse engineering of the state machine of
+the e.dentifier, is courtesy of the <a href="http://www.cs.ru.nl/~joeri/talks/ictopen2012.pdf">Radboud Universiteit Nijmegen</a>.</p>
+<h2 id="modeling-the-problem"><a class="header" href="#modeling-the-problem">Modeling the problem</a></h2>
+<p>There are a number of ways in which we could model this problem. We could model
+the individual behavior of the reader and the smart card as Threads or Actors,
+like we did for <a href="challenge-fourteen.html">Challenge Fourteen</a>.</p>
+<p>In this case we're going to do something a bit simpler: the team from Radboud
+Universiteit has figured out the state machine of the combined system of Reader
+and Smart Card by automatically probing it. We are going to model the state machine:</p>
+<p><img src="edentifier-statemachine.png" alt="State Machine" /></p>
+<h2 id="translating-to-alloy"><a class="header" href="#translating-to-alloy">Translating to Alloy</a></h2>
+<p>Let's put down some data structures to hold the state of our system:</p>
+<pre><code class="language-alloy">-- The states of the E.dentifier
+enum State { Ready, PinVerified, WaitForConfirmation }
+-- The events that can happen, both from the Human as well as the PC
+enum Event { HumanEnterPin, HumanPressOk, PcDisplayData, PcGenCryptogram }
+-- The signals that the E.dentifier sends to the PC
+enum Output { Ok, Error, Timeout, Cryptogram }
+
+-- One global object to hold all states
+one sig Edentifier {
+  var state: State,
+  var event: Event,
+  var output: Output,
+}
+</code></pre>
+<p>The next question is how we are going to model the state transition table.
+A state transition table has 3 or 4 columns:</p>
+<ul>
+<li>The current state</li>
+<li>The input (event)</li>
+<li>The next state</li>
+<li>The output (signal to the PC)</li>
+</ul>
+<p><strong>EXERCISE</strong>: think about how you would represent the state transition table
+in Alloy. There are a couple of different ways you could do it: you could write
+one or more <code>pred</code>s to represent valid combinations of these 4 elements, or a
+<code>fun</code> that represents a set of 4-tuples. Write a couple of transitions in your
+mechanism of choice.</p>
+<hr />
+<p>We ended up representing the transitions as a giant table of 4-tuples. This is
+an elegant way of representing the table, but it has one downside: all
+0-argument functions will automatically be represented in the visualizer, so we
+will see a bunch of lines when we visualize the model! In the <em>Theme</em> settings
+of the visualizer, we will have to turn off visualizing <code>$transitions</code>.</p>
+<pre><code class="language-alloy">fun transitions: set State -&gt; Event -&gt; State -&gt; Output {
+   Ready -&gt; PcDisplayData -&gt; Ready -&gt; Error
++ Ready -&gt; PcGenCryptogram -&gt; Ready -&gt; Error
++ Ready -&gt; HumanPressOk -&gt; Ready -&gt; Timeout
++ Ready -&gt; HumanEnterPin -&gt; PinVerified -&gt; Ok
++ PinVerified -&gt; PcDisplayData -&gt; WaitForConfirmation -&gt; Ok
++ PinVerified -&gt; HumanEnterPin -&gt; PinVerified -&gt; Ok
++ PinVerified -&gt; HumanPressOk -&gt; PinVerified -&gt; Timeout
++ PinVerified -&gt; PcGenCryptogram -&gt; Ready -&gt; Cryptogram
++ WaitForConfirmation -&gt; HumanEnterPin -&gt; PinVerified -&gt; Ok
++ WaitForConfirmation -&gt; HumanPressOk -&gt; PinVerified -&gt; Ok
++ WaitForConfirmation -&gt; PcDisplayData -&gt; WaitForConfirmation -&gt; Error
++ WaitForConfirmation -&gt; PcGenCryptogram-&gt; WaitForConfirmation -&gt; Error
+}
+
+-- Check that there is a row in the table for every combination of
+-- State and Event
+check TransitionsTableIsComplete {
+  // ...
+}
+</code></pre>
+<p><strong>EXERCISE</strong>: it is a good exercise to add validations into your model
+to make sure you didn't forget anything. Complete the <code>check</code> above
+that ensures that the table is complete; that is, there is a row in
+it for every combination of state and input.</p>
+<h2 id="running-the-state-machine"><a class="header" href="#running-the-state-machine">Running the state machine</a></h2>
+<p>Let's write some predicates that we'll use to run the state machine:</p>
+<pre><code class="language-alloy">-- Set up the initial state of the state machine
+pred init {
+  // ...
+}
+
+-- Make the state machine perform one step according its current state and
+-- current event.
+pred step {
+  // ...
+}
+
+-- Running the state machine means setting it up and then performing a step
+-- at every time step.
+pred runStateMachine {
+  init
+  always step
+}
+
+-- Test the predicates above. Run the state machine, and expect to find it
+-- in some particular state at some point
+run {
+  runStateMachine
+  eventually { Edentifier.state = WaitForConfirmation }
+}
+</code></pre>
+<p><strong>EXERCISE</strong>: complete the <code>init</code> and <code>step</code> predicates above to initialize
+the state machine and make it perform a step, respectively. Variables you don't
+constrain will vary across all possible values, which can be useful! Decide
+on what you want <code>output</code> to represent: the response to the <em>current</em> event,
+or the response to <em>previous</em> time step's event.</p>
+<h2 id="checking-for-useful-properties"><a class="header" href="#checking-for-useful-properties">Checking for useful properties</a></h2>
+<p>A desirable behavior of a smart card reader like this would seem to be that
+no signing code can be generated unless a user enters their PIN code, sees
+the transaction and presses the OK button.</p>
+<pre><code class="language-alloy">check UserConfirmationIsRequiredForAllCryptograms {
+  runStateMachine =&gt; {
+    // ...
+  }
+}
+</code></pre>
+<p><strong>EXERCISE</strong>*: complete the condition above which checks that the user
+is involved in the generation of cryptograms. Try checking the system, does it
+satsify the requirement? Think about the time operators you want to use here.
+Here are your choices:</p>
+<ul>
+<li>Future time operators
+<ul>
+<li><code>always P</code>: P is true in the current and all future states</li>
+<li><code>eventually P</code>: P is true in at least one current or future state</li>
+<li><code>after P</code>: P is true in the next state</li>
+<li><code>P until Q</code>: P is true zero or more times and then Q is true</li>
+<li><code>Q releases P</code>: P can only be false after Q is true (maybe Q never happens)</li>
+</ul>
+</li>
+<li>Past time operators
+<ul>
+<li><code>historically P</code>: P is true in the current and all past states</li>
+<li><code>once P</code>: P is true in at least one current or past state</li>
+<li><code>before P</code>: P is true in the previous state</li>
+<li><code>P since Q</code>: Q was true once and then P was true until the current state</li>
+<li><code>Q triggered P</code>: ...</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>The e.dentifier is vulnerable to a hijacked PC: if the PC software sends a
+<code>PcGenCryptogram</code> event after the smart card has been unlocked, the display and
+confirmation can be bypassed.</p>
+<p><strong>EXERCISE</strong>: if you want, design a state machine that prevents this behavior.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../time/challenge-fourteen.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../#.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../time/challenge-fourteen.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../#.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
