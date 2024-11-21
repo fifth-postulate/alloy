@@ -2,7 +2,7 @@
 The _Smorgasbord of Paradigms_ workshop is brought to you by the lovely Rico
 and Daan.
 
-![Rico & Daan enjoying a game of three-way chess; Picture by Felienne](https://fifth-postulate.nl/smorgasbord-of-paradigms/image/rico-daan.jpeg)
+![Rico & Daan enjoying a game of three-way chess; Picture by Felienne](https://fifth-postulate.nl/image/rico-daan.jpeg)
 
 ## Rico Hermans
 Rico is a software engineer working for Amazon and applies his knowledge to

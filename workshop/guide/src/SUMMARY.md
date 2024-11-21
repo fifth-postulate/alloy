@@ -9,7 +9,7 @@
 * [Organization](./introduction/organisation.md)
 
 # Alloy
-* [First Steps](#)
+* [First Steps](./alloy/first-steps.md)
 * [Exploring the analyzer](#)
 
 # Analyzing structure and operations
@@ -25,3 +25,4 @@
 # Appendices
 * [Sources](./appendix/sources.md)
 * [Resources](./appendix/resources.md)
+* [Installation](./appendix/installation.md)

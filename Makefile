@@ -4,7 +4,7 @@ ARCHIVE=workshop-material.tar.gz
 MATERIAL_DIR=build
 WEBPAGE_DIR=public-build
 WEBPAGE_DEPLOYMENT_DIR=docs/workshop
-SUB_DIRECTORIES=workshop resources
+SUB_DIRECTORIES=docs workshop resources
 CLEAN_TARGETS=$(addsuffix clean,$(SUB_DIRECTORIES))
 
 .PHONY: all clean ${SUB_DIRECTORIES} ${CLEAN_TARGETS}

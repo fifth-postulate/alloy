@@ -1,0 +1,12 @@
+digraph "graph" {
+graph [fontsize=12]
+node [fontsize=12]
+edge [fontsize=12]
+rankdir=TB;
+"N2" -> "N1" [uuid = "<Chicken, Grain>", color = "#e41a1c", fontcolor = "#e41a1c", style = "solid", label = "eats", dir = "forward", weight = "1"]
+"N3" -> "N2" [uuid = "<Fox, Chicken>", color = "#e41a1c", fontcolor = "#e41a1c", style = "solid", label = "eats", dir = "forward", weight = "1"]
+"N0" [uuid="Farmer", label="Farmer\n(far)", color="#ffd700", fontcolor = "#000000", shape = "box", style = "filled, solid"]
+"N1" [uuid="Grain", label="Grain\n(near)", color="#ffd700", fontcolor = "#000000", shape = "box", style = "filled, solid"]
+"N2" [uuid="Chicken", label="Chicken\n(far)", color="#ffd700", fontcolor = "#000000", shape = "box", style = "filled, solid"]
+"N3" [uuid="Fox", label="Fox\n(near)", color="#ffd700", fontcolor = "#000000", shape = "box", style = "filled, solid"]
+}
