@@ -24,3 +24,4 @@
 
 # Appendices
 * [Sources](./appendix/sources.md)
+* [Resources](./appendix/resources.md)
