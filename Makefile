@@ -1,12 +1,15 @@
+.PHONY: all deploy clean
+
 ARCHIVE=workshop-material.tar.gz
 MATERIAL_DIR=build
 WEBPAGE_DIR=public-build
+WEBPAGE_DEPLOYMENT_DIR=docs/workshop
 SUB_DIRECTORIES=workshop resources
 CLEAN_TARGETS=$(addsuffix clean,$(SUB_DIRECTORIES))
 
 .PHONY: all clean ${SUB_DIRECTORIES} ${CLEAN_TARGETS}
 
-all: ${ARCHIVE} ${WEBPAGE_DIR} docs/workshop
+all: ${ARCHIVE} ${WEBPAGE_DIR}
 ${ARCHIVE}: ${MATERIAL_DIR}
 	tar cvfz $@ $<
 
@@ -28,12 +31,15 @@ ${WEBPAGE_DIR}: ${MATERIAL_DIR} ${ARCHIVE}
 	cp -Rfa $</presentation $@/presentation
 	cp -Rfa resources/public/. $@/
 
-docs/workshop: ${WEBPAGE_DIR}
+${WEBPAGE_DEPLOYMENT_DIR}: ${WEBPAGE_DIR}
 	mkdir -p $@
 	cp -Rfa $</* $@
 
+deploy: ${WEBPAGE_DEPLOYMENT_DIR}
+	@echo "finished deploying"
+
 clean: ${CLEAN_TARGETS}
-	rm -Rf ${ARCHIVE} ${MATERIAL_DIR} ${WEBPAGE_DIR} docs/workshop
+	rm -Rf ${ARCHIVE} ${MATERIAL_DIR} ${WEBPAGE_DIR} ${WEBPAGE_DEPLOYMENT_DIR}
 
 %clean: %
 	${MAKE} -C $< clean
