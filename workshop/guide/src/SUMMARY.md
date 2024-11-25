@@ -10,6 +10,7 @@
 
 # Alloy
 * [First Steps](./alloy/first-steps.md)
+* [Relations](./alloy/relations.md)
 * [Exploring the analyzer](#)
 
 # Analyzing structure and operations
