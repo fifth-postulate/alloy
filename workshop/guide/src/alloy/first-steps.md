@@ -96,7 +96,7 @@ Executing "Run solvePuzzle for 8 State expect 1"
 Notice that the instance is a link. Following it opens a window displaying a
 dots and boxes diagram akin to the following:
 
-![A solution to the river crossing problem?!](https://fifth-postulate.nl/image/river-crossing-solution.dot.png)
+![A solution to the river crossing problem?!](https://fifth-postulate.nl/alloy/image/river-crossing-solution.dot.png)
 
 There is certainly something going on, but how this is a solution isn't clear.
 In the window that is showing the diagram, in the ribbon you can find a
@@ -105,13 +105,13 @@ Currently the projection is set to "None".
 
 Change the projection to project over "State". Now it show a single State.
 
-![The first state of a solution to the river crossing problem](https://fifth-postulate.nl/image/river-crossing-solution.state0.dot.png)
+![The first state of a solution to the river crossing problem](https://fifth-postulate.nl/alloy/image/river-crossing-solution.state0.dot.png)
 
 The controls allow you to transition to the next State, which helps in
 visualizing how the farmer must work hard to let everybody safely cross the 
 river.
 
-![A next state after the first of a solution to the river crossing problem](https://fifth-postulate.nl/image/river-crossing-solution.state1.dot.png)
+![A next state after the first of a solution to the river crossing problem](https://fifth-postulate.nl/alloy/image/river-crossing-solution.state1.dot.png)
 
 The can deduct that in this solution the farmer first brings the chicken to the
 far side.
