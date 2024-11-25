@@ -8,9 +8,11 @@
 * [Facilitators](./introduction/fascilitators.md)
 * [Organization](./introduction/organisation.md)
 
+# Prelimenaries
+* [Relations](./prelimenaries/relations.md)
+
 # Alloy
 * [First Steps](./alloy/first-steps.md)
-* [Relations](./alloy/relations.md)
 * [Exploring the analyzer](#)
 
 # Analyzing structure and operations
