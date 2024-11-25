@@ -2,6 +2,10 @@
 This book is divided into the following parts
 
 * Introduction
+* Prelimenaries
+* Alloy
+* Analyzing Structure and operation
+* Time
 * Appendices
 
 ## Introduction
