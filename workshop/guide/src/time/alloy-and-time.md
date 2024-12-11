@@ -58,8 +58,10 @@ run {
 }
 ```
 
-**EXERCISE**: Run the model of traffic lights above. Use the arrow buttons to
+```admonish tip title="Exercise"
+Run the model of traffic lights above. Use the arrow buttons to
 *step through the time steps. Observe the model change over time.
+```
 
 The default scope is (at most) 10 time steps. You can change it by writing
 something like `run { ... } for 10..20 steps`.
@@ -102,11 +104,13 @@ only one traffic light that means the one we have has to make progress).
 Sometimes we want a bit more arbitrary behavior: in every time
 step, perhaps the traffic light changes state or it doesn't.
 
-**EXERCISE**: Change `always one t: TrafficLight` to `always lone t:
+```admonish tip title="Exercise"
+Change `always one t: TrafficLight` to `always lone t:
 TrafficLight`, to say that the traffic light either changes state or
 doesn't. Run the model again. Does the output look the same as what you
 saw before? Click **new trace** a couple of times to explore different
 traces. How long are the traces?
+```
 
 ### Forcing interesting states
 
@@ -127,10 +131,12 @@ possible. This might make it harder to find traces in which "interesting" things
 happen. So if you want to see "interesting" behavior happen, it is best to
 ask for them explicitly.
 
-**EXERCISE**: modify the `run` statement above and add a condition to make sure
+```admonish tip title="Exercise"
+Modify the `run` statement above and add a condition to make sure
 that the trace will include a state of where the traffic light is red. You will
 need to use a temporal keyword for this. Run the model. Does the light turn red?
 If the behavior seems to ignore the specification, don't worry about that just yet.
+```
 
 ### Frame conditions
 
@@ -166,15 +172,19 @@ that don't change*.
 Restrictions that explicitly state that variables keep the same value are
 called *frame conditions*.
 
-**EXERCISE**: add a *frame condition* to the step variable from above,
+```admonish tip title="Exercise"
+Add a *frame condition* to the step variable from above,
 to make sure that "unpicked" traffic lights don't randomly change state.
 Run the model again, and make sure it behaves as you expect. You could run the
 model a couple of times and eyeball the output, or you could consider writing a
 `check` to make sure the model behaves as expected.
+```
 
-**EXERCISE**: instead of running the model for `1 TrafficLight`, run it
+```admonish tip title="Exercise"
+Instead of running the model for `1 TrafficLight`, run it
 for `2`. Is the way you wrote your frame condition still correct if there is
 more than one traffic light?
+```
 
 Frame conditions can be written in a couple of different styles. Here are
 a couple of possible conditions you could have used:

@@ -6,8 +6,15 @@ This is the compendium material to a workshop titled
 It aims to provide an insight in the tool Alloy describe, simulate and provide
 counter examples to various models.
 
+## Prerequisites
+
+```
+cargo install mdbook
+cargo install mdbook-admonish
+```
+
 ## Development
-We use Make to automate various tasks in this project. Run 
+We use Make to automate various tasks in this project. Run
 
 ```plain
 make

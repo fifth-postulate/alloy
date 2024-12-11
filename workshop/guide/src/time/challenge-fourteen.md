@@ -55,14 +55,15 @@ class BoundedBuffer {
 
 If you are an experienced Java programmer, you may be able to spot the bug
 straight away. But let's go through the exercise of modeling this problem in
-Alloy and see if we can find the bug that way.
+Alloy and see if we can find the bug without prior knowledge.
 
 ### What does this code mean?
 
 If you are not familiar with Java and its concurrency primitives, here is a
 small recap of the most important concepts:
 
-- Every Java object implicitly has an associated mutex and condition flag.
+- Every Java object implicitly has an associated mutex and condition flag
+  (a "monitor" in Java parlance).
 - `synchronized` makes sure that the method runs atomically: this implicitly
   acquires and releases the mutex, so that no 2 `synchronized` methods of the same
   object will execute at the same time.
@@ -77,7 +78,8 @@ small recap of the most important concepts:
 We're going to translate this program into Alloy. First: the queue buffer.
 We don't care about the values in the buffer, or exactly where they go (yet).
 If we wanted to confirm that we read items from the queue in the same order
-as we put them, we would model those parts as well, but for now we will ignore them.
+as we put them, we would model those parts as well, but for now we will ignore them
+and just focus on the capacity of the buffer and how many elements there are in it.
 
 Here is the start of the buffer:
 
@@ -93,7 +95,12 @@ fact {
 }
 ```
 
-**EXERCISE**: write the state relations of the `Buffer` sig and their facts.
+```admonish tip title="Exercise"
+Write the state relations of the `Buffer` sig and their facts.
+
+Remember that one of the Buffer values can change over time,
+so should be declared `var`.
+```
 
 Next, the threads that will act on our buffer:
 
@@ -120,10 +127,15 @@ pred allThreadsAwake {
 
 We need to keep track of which threads are awake and which are asleep.
 
-**EXERCISE**: add relation to keep track of which threads are awake and which
-are asleep at a point in time.  You could make a property mapping a `Thread` to
-a `Bool`, or you could make a sig for global variables that holds a set of
+```admonish tip title="Exercise"
+Add a relation to keep track of which threads are awake and which
+are asleep. The values of this relation can vary over time
+so it should be `var`.
+
+Tip: you could make a property mapping a `Thread` to a
+`Bool`, or you could make a sig for global variables that holds a set of
 `Thread`s.
+```
 
 We are now going to implement the `wait()` and `notify()` primitives:
 
@@ -165,11 +177,13 @@ Instead of immediately declaring it as an initialization `fact`, we made
 tests of `wait` and `notify`, and explore their behavior in a state of mixed
 sleeping and awake threads without having to do additional state manipulation.
 
-**EXERCISE**: implement the predicates above. They will involve a
+```admonish tip title="Exercise"
+Implement the predicates above. They will involve a
 time step, so you will prime a variable (`myvar'`) to update the value of some
 relation. Use the provided commands to check your implementation. Did you
 see any unexpected behavior? (Remember that if you don't constrain the
 next state of a variable, the analyzer is allowed to pick any value!)
+```
 
 ## What do we want to check?
 
@@ -224,9 +238,11 @@ condition of the `while` is satisfied.
 In the next section, we will look at some processes that don't execute in
 a single indivisible step, which need some more bookkeeping.
 
-**EXERCISE**: implement the `put` and `take` predicates. Watch out for
+```admonish tip title="Exercise"
+Implement the `put` and `take` predicates. Watch out for
 the integer addition! You need to write `plus[x, y]` (or `x.plus[y]`),
 because `x + y` means set union, not addition!
+```
 
 ## Finding the bug
 
@@ -262,17 +278,21 @@ check FindTheBug {
 }
 ```
 
-**EXERCISE**: write one or more invariants in the `check` block to make sure our
+```admonish tip title="Exercise"
+Write one or more invariants in the `check` block to make sure our
 system satisfies those invariants at every point in time, then run Alloy to see
 if it satisfies them. If you're unsure about what to check for, consider this:
 what do we definitely *not* want to happen in a system with multiple threads?
+```
 
 In our case, the counterexample took 8 time steps to surface a violation of the
 invariant. It involves 2 readers and 1 writer.
 
-**EXERCISE**: what happened? Step throug the counterexample, observe the state
+```admonish tip title="Exercise"
+What happened? Step throug the counterexample, observe the state
 changes at every step, and describe what happened. You can play a little with
 the visualizer settings to make it easier to read.
+```
 
 ## Fixing the bug
 
@@ -293,9 +313,11 @@ pred notifyAll {
 }
 ```
 
-**EXERCISE**: implement `notifyAll`, then update the code to use the new
+```admonish tip title="Exercise"
+Implement `notifyAll`, then update the code to use the new
 *predicate, and confirm that
 it fixes the bug (or at least, that the bug doesn't surface in 10 time steps and
 with however many objects you checked!). Did you need to change all occurrences
 of `notify`, or can you get away with just changing one? What would you do in
 practice?
+```

@@ -61,11 +61,13 @@ A state transition table has 3 or 4 columns:
 - The next state
 - The output (signal to the PC)
 
-**EXERCISE**: think about how you would represent the state transition table
+```admonish tip title="Exercise"
+Think about how you would represent the state transition table
 in Alloy. There are a couple of different ways you could do it: you could write
 one or more `pred`s to represent valid combinations of these 4 elements, or a
 `fun` that represents a set of 4-tuples. Write a couple of transitions in your
 mechanism of choice.
+```
 
 -------
 
@@ -99,10 +101,12 @@ check TransitionsTableIsComplete {
 }
 ```
 
-**EXERCISE**: it is a good exercise to add validations into your model
+```admonish tip title="Exercise"
+It is a good exercise to add validations into your model
 to make sure you didn't forget anything. Complete the `check` above
 that ensures that the table is complete; that is, there is a row in
 it for every combination of state and input.
+```
 
 ## Running the state machine
 
@@ -135,11 +139,13 @@ run {
 }
 ```
 
-**EXERCISE**: complete the `init` and `step` predicates above to initialize
+```admonish tip title="Exercise"
+Complete the `init` and `step` predicates above to initialize
 the state machine and make it perform a step, respectively. Variables you don't
 constrain will vary across all possible values, which can be useful! Decide
 on what you want `output` to represent: the response to the *current* event,
 or the response to *previous* time step's event.
+```
 
 ## Checking for useful properties
 
@@ -155,10 +161,12 @@ check UserConfirmationIsRequiredForAllCryptograms {
 }
 ```
 
-**EXERCISE***: complete the condition above which checks that the user
+```admonish tip title="Exercise"
+Complete the condition above which checks that the user
 is involved in the generation of cryptograms. Try checking the system, does it
 satsify the requirement? Think about the time operators you want to use here.
 Here are your choices:
+```
 
 - Future time operators
   - `always P`: P is true in the current and all future states
@@ -179,4 +187,6 @@ The e.dentifier is vulnerable to a hijacked PC: if the PC software sends a
 `PcGenCryptogram` event after the smart card has been unlocked, the display and
 confirmation can be bypassed.
 
-**EXERCISE**: if you want, design a state machine that prevents this behavior.
+```admonish tip title="Exercise"
+If you want, design a state machine that prevents this behavior.
+```
