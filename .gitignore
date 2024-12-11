@@ -2,3 +2,5 @@ public-build
 build
 workshop-material.tar.gz
 .DS_Store
+highlight-alloy/*.js
+highlight-alloy/node_modules

@@ -5,7 +5,7 @@ SOURCE_DIRECTORY=src
 SOURCES=$(shell find ${SOURCE_DIRECTORY} -name '*.md')
 
 ${BOOK}: ${SOURCES}
-	mdbook build
+	mdbook build --dest-dir=../../build/guide
 
 clean:
 	mdbook clean

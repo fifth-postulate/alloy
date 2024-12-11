@@ -1,8 +1,9 @@
 .PHONY: all deploy clean
 
 ARCHIVE=workshop-material.tar.gz
-MATERIAL_DIR=build
-WEBPAGE_DIR=public-build
+MATERIAL_DIR=build/material
+WEBPAGE_DIR=build/public
+GUIDE_BUILD_DIR=build/guide
 WEBPAGE_DEPLOYMENT_DIR=docs/workshop
 SUB_DIRECTORIES=docs workshop resources
 CLEAN_TARGETS=$(addsuffix clean,$(SUB_DIRECTORIES))
@@ -13,10 +14,10 @@ all: ${ARCHIVE} ${WEBPAGE_DIR}
 ${ARCHIVE}: ${MATERIAL_DIR}
 	tar cvfz $@ $<
 
-${MATERIAL_DIR}: ${SUB_DIRECTORIES} ${REFERENCE}
+${MATERIAL_DIR}: ${SUB_DIRECTORIES} ${REFERENCE} workshop/guide/highlight-alloy.js
 	mkdir -p $@
 	cp -Rfa resources/material/. $@/
-	cp -Rfa workshop/guide/book $@/guide
+	cp -Rfa ${GUIDE_BUILD_DIR}/ $@/guide/
 	mkdir -p $@/example
 	cp -Rfa workshop/example/. $@/example
 	cp -Rfa presentation $@/presentation
@@ -34,6 +35,10 @@ ${WEBPAGE_DIR}: ${MATERIAL_DIR} ${ARCHIVE}
 ${WEBPAGE_DEPLOYMENT_DIR}: ${WEBPAGE_DIR}
 	mkdir -p $@
 	cp -Rfa $</* $@
+
+workshop/guide/highlight-alloy.js: highlight-alloy/highlight-alloy.ts highlight-alloy/package-lock.json highlight-alloy/tsconfig.json
+	cd highlight-alloy && npm run build
+	cp highlight-alloy/highlight-alloy.js $@
 
 deploy: ${WEBPAGE_DEPLOYMENT_DIR}
 	@echo "finished deploying"

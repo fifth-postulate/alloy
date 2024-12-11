@@ -1,10 +1,9 @@
 [book]
-authors = ["Rico Hermans", "Daan van Berkel"]
+authors = ["Daan van Berkel", "Rico Hermans"]
 language = "en"
 multilingual = false
 src = "src"
-title = "Alloy"
+title = "asdf"
 
 [output.html]
-mathjax-support = true
-additional-css = ["custom.css"]
+additional-js = ["highlight-alloy.js"]
