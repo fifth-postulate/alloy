@@ -9,13 +9,19 @@ For example; a banks ledger relates, among other things, a transaction with a
 sender and a receiver. The relation _ledger_ has three components. In other
 words it has arity 3.
 
-**EXERCISE**: Think of a relation that relates more than two items.
+```admonish tip title="Exercise"
+Think of a relation that relates more than two items.
+```
 
-**EXERCISE**: We have seen relations of arity 2 and 3. What about other arities?
+```admonish tip title="Exercise"
+We have seen relations of arity 2 and 3. What about other arities?
 Can you think of a relation of arity 1?
+```
 
-**EXERCISE**: What, if any, would be the significance of a relation with arity
+```admonish tip title="Exercise"
+What, if any, would be the significance of a relation with arity
 zero?
+```
 
 Although a relation can use any finite number of components, we tend to disallow
 mixing multiple arities in a single relations. Although nothing is preventing

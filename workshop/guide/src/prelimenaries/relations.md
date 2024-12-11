@@ -14,8 +14,10 @@ A [recipe](https://en.wikipedia.org/wiki/Recipe) is, among other things, a
 A recipe _relates_ food items, such as flour, water, sugar, certain spices and
 chocolate chips, with a dish, for example that of a cookie.
 
-**EXERCISE**: Take some of your favorite dishes, pick a recipes for them and
+```admonish tip title="Exercise"
+Take some of your favorite dishes, pick a recipes for them and
 lists some of its ingredients.
+```
 
 So, ingredients is a relation between food items and a recipe. Given a food
 item and a recipe, one can determine if the food item is an ingredient of
@@ -28,8 +30,10 @@ is an element of a set _I_, for the ingredient relation.
 For example because _flour_ is an ingredient for the _cookie_ recipe, the
 ingredient relation _I_ contains the the tuple _(flour, cookie)_.
 
-**EXERCISE**: You have listed the ingredients of some recipes in an earlier
+```admonish tip title="Exercise"
+You have listed the ingredients of some recipes in an earlier
 exercise. Using the new notation, summarize the information of that exercise.
+```
 
 ## Summary
 

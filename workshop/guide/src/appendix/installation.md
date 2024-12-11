@@ -1,8 +1,18 @@
 # Installation
 
-The best place to get Alloy is from the [download page][alloy]. It is a
-Java Archive (JAR) file so you need to install a
-[Java Runtime Environment][jre] (JRE).
+The best place to get Alloy is from the [download page][alloy].
+
+## MacOS
+
+For macOS, the download page above includes a disk image that
+is self-contained.
+
+## Windows and Linux
+
+On Windows and Linux, you download nad run the `.jar` file.
+
+It is a Java Archive (JAR) file so you need to install a [Java Runtime
+Environment][jre] (JRE).
 
 Once everything is in place one can start Alloy via the commandline as
 

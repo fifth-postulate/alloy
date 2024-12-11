@@ -152,6 +152,7 @@ pred notify {
 
 -- Testing the wait predicate
 run WaitIsSatisfiable { all t: Thread | t.wait }
+
 check TestWait {
   -- After we call wait on a thread, it should be asleep the next tick
   all t: Thread | t.wait => after t.isSleeping
@@ -159,6 +160,7 @@ check TestWait {
 
 -- Testing the notify predicate
 run NotifyIsSatisfiable { notify }
+
 check TestNotify {
   -- After calling notify...
   notify => {
@@ -172,10 +174,17 @@ check TestNotify {
 }
 ```
 
-Instead of immediately declaring it as an initialization `fact`, we made
-`allThreadsAwake` a separate predicate. That way, we can avoid calling it in our
-tests of `wait` and `notify`, and explore their behavior in a state of mixed
-sleeping and awake threads without having to do additional state manipulation.
+We could have made the contents of `allThreadsAwake`, which initializes all
+threads to be awake, a global `fact`. If we did that, we would have had to put
+in additional effort to have our tests for `wait` and `notify` start go through
+a number of transitions in order to get interesting configurations of asleep and
+awake threads.
+
+Instead, we define `allThreadsAwake` as a separate initialization predicate
+that we only call if we run the model "for real". By explicitly keeping
+thread states out of the tests for `wait` and `notify` their behavior
+gets explored in all possible thread configurations without us having
+to do anything else.
 
 ```admonish tip title="Exercise"
 Implement the predicates above. They will involve a
@@ -183,6 +192,10 @@ time step, so you will prime a variable (`myvar'`) to update the value of some
 relation. Use the provided commands to check your implementation. Did you
 see any unexpected behavior? (Remember that if you don't constrain the
 next state of a variable, the analyzer is allowed to pick any value!)
+
+To check your implementations, first execute the `run` command to make sure
+your command does something, then run the `check` command it doesn't do
+something wrong.
 ```
 
 ## What do we want to check?
@@ -230,18 +243,27 @@ pred stepAnyThread {
 }
 ```
 
-Fortunately, the predicates can be quite straightforward: as long as we keep
-calling `put` and `take` infinitely in a loop, the `synchronized/while/wait`
-ensures that the entire function will execute in one indivisible step if the
-condition of the `while` is satisfied.
+Fortunately, the behavior of the Java functions is constrained by
+the fact that the methods are `synchronized` and therefore execute in one
+step. The `while` loop is only there to wait for the moment that the
+function is allowed to execute, and when it does it executes atomically.
+That means our predicates can be straightforward: we don't have to deal
+with modeling the fact that the operations of a `Reader` or `Writer` could be
+interrupted halfway through.
 
-In the next section, we will look at some processes that don't execute in
-a single indivisible step, which need some more bookkeeping.
+We can ignore the `while` loop; as long as we keep calling our predicates `put`
+and `take` infinitely in a loop, we can say that the method either executes if
+it can, or doesn't if it cannot. That behavior will be equivalent to a Java
+program running those methods in a loop.
+
+(In a future chapter, we will look at some processes that don't execute in a
+single indivisible step, which need some more bookkeeping.)
 
 ```admonish tip title="Exercise"
-Implement the `put` and `take` predicates. Watch out for
-the integer addition! You need to write `plus[x, y]` (or `x.plus[y]`),
-because `x + y` means set union, not addition!
+Implement the `put` and `take` predicates.
+
+Watch out for the integer addition! You need to write `plus[x, y]` (or
+`x.plus[y]`), because `x + y` means set union, not addition!
 ```
 
 ## Finding the bug
@@ -314,10 +336,150 @@ pred notifyAll {
 ```
 
 ```admonish tip title="Exercise"
-Implement `notifyAll`, then update the code to use the new
-*predicate, and confirm that
-it fixes the bug (or at least, that the bug doesn't surface in 10 time steps and
-with however many objects you checked!). Did you need to change all occurrences
-of `notify`, or can you get away with just changing one? What would you do in
-practice?
+Implement `notifyAll`, then update the code to use the new predicate, and
+confirm that it fixes the bug (or at least, that the bug doesn't surface in 10
+time steps and with however many objects you checked!).
+
+Did you need to change all occurrences of `notify`, or can you get away with
+just changing one? What would you do in practice?
+```
+
+# Our solution
+
+```alloy
+-- Threads
+
+abstract sig Thread { }
+sig Writer extends Thread { }
+sig Reader extends Thread { }
+
+one sig G {
+  var awake: set Thread,
+}
+
+fact {
+  -- All threads start out awake
+  G.awake = Thread
+}
+
+-- Put a single thread to sleep
+pred wait[t: Thread] {
+  G.awake' = G.awake - t
+}
+
+-- Wake up an arbitrary thread
+pred notify {
+  some suspended implies {
+    some t: suspended | G.awake' = G.awake + t
+  } else {
+    unchanged[G.awake]
+  }
+}
+
+pred notifyAll {
+  G.awake' = Thread
+}
+
+-- All sleeping threads
+fun suspended: set Thread {
+  Thread - G.awake
+}
+
+-- Buffer stuff
+
+one sig Buffer {
+  capacity: Int,
+  var occupied: Int,
+}
+
+fact {
+  -- Capacity is not empty
+  Buffer.capacity > 0
+  -- Buffer starts out empty
+  Buffer.occupied = 0
+}
+
+-- Macro for frame conditions
+let unchanged[r] { ((r) = (r)') } // mind the parentheses
+
+-- Actual thread code
+
+/*
+    synchronized
+    void put(Object x) throws InterruptedException {
+      while( occupied == buffer.length )
+        wait();
+      notify();
+      ++occupied;
+      putAt %= buffer.length;
+      buffer[putAt++] = x;
+    }
+*/
+
+-- This writer doesn't need a program counter, since the whole routine completes in one step or
+-- is retried in one step. Readers and writers also always run forever like this.
+pred stepWriter[w: Writer] {
+  (Buffer.occupied = Buffer.capacity) implies {
+    wait[w]
+    unchanged[Buffer.occupied]
+  } else {
+    notify
+    Buffer.occupied' = plus[Buffer.occupied, 1]
+  }
+}
+
+/*
+    synchronized
+    Object take() throws InterruptedException {
+      while( occupied == 0 )
+        wait();
+      notify();
+      --occupied;
+      takeAt %= buffer.length;
+      return buffer[takeAt++];
+    }
+*/
+
+-- This process doesn't need a program counter, since the whole routine completes in one step or
+-- is retried in one step. Readers and writers also always run forever like this.
+pred stepReader[r: Reader] {
+  (Buffer.occupied = 0) implies {
+    wait[r]
+    unchanged[Buffer.occupied]
+  } else {
+    notify
+    Buffer.occupied' = minus[Buffer.occupied, 1]
+  }
+}
+
+pred stepThread[t: Thread] {
+  t in Writer => stepWriter[t]
+  t in Reader => stepReader[t]
+}
+
+pred stepAnyThread {
+  some G.awake implies { some t: G.awake | stepThread[t] } else {
+    -- We need to frame here since the stepXxx predicates can't do it
+    unchanged[G.awake]
+    unchanged[Buffer.occupied]
+  }
+}
+
+-- Just generate some interesting traces
+run {
+  always stepAnyThread
+  some Reader
+  some Writer
+}
+
+-- Check for no deadlock
+check {
+  {
+    always stepAnyThread
+    some Reader
+    some Writer
+  } => {
+    always some G.awake
+  }
+} for 5
 ```

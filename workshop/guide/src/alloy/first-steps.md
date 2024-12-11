@@ -75,7 +75,9 @@ help itself to the grain if the farmer wouldn't stop it.
 How can the entire party cross the river, without any member of the party being
 eaten?
 
-**EXERCISE**: Solve this particular instance of a river crossing problem.
+```admonish tip title="Exercise"
+Solve this particular instance of a river crossing problem.
+```
 
 With some time, one could solve the above problem by hand. Some of you would
 even enjoy the proces of working out a solution.
@@ -84,7 +86,7 @@ Let's see how the Alloy Analyzer could help us.
 
 In the ribbon of icons you can find a cloud with a lightning bolt labelled
 "Execute". When you pressed the trace pane mentions something along the lines
-of 
+of
 
 ```plain
 Executing "Run solvePuzzle for 8 State expect 1"
@@ -108,7 +110,7 @@ Change the projection to project over "State". Now it show a single State.
 ![The first state of a solution to the river crossing problem](https://fifth-postulate.nl/alloy/image/river-crossing-solution.state0.dot.png)
 
 The controls allow you to transition to the next State, which helps in
-visualizing how the farmer must work hard to let everybody safely cross the 
+visualizing how the farmer must work hard to let everybody safely cross the
 river.
 
 ![A next state after the first of a solution to the river crossing problem](https://fifth-postulate.nl/alloy/image/river-crossing-solution.state1.dot.png)

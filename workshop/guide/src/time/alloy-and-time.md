@@ -37,12 +37,13 @@ that you haven't seen yet:
 
 Predicates that don't have a temporal keyword associated with them, like
 the `all` in the example above, hold in the *first state*, so they are used
-for initialization.
+for initialization. (If you want to write an invariant for a system
+with time, you need to write `always all ...`).
 
 In general, a time-based model will look like this:
 
 ```alloy
--- Initialize all states
+-- Initialize the state of the first time step
 pred init {
   // ...
 }
@@ -59,8 +60,8 @@ run {
 ```
 
 ```admonish tip title="Exercise"
-Run the model of traffic lights above. Use the arrow buttons to
-*step through the time steps. Observe the model change over time.
+Run the model of traffic lights above. Use the arrow buttons in the visualizer
+to step through the time steps. Observe the model change over time.
 ```
 
 The default scope is (at most) 10 time steps. You can change it by writing
@@ -77,39 +78,47 @@ buttons to step through it.
 
 Notice that every trace ends in a loop, which indicates that it goes back to a
 previous state. This is called a *lasso trace*. That means that a trace has a
-*first* state, but it doesn't have a *last* state. This property makes it so that temporal
-formulas are always valid; if we didn't have infinite traces, what would the
-expression `x'` even refer to in the last state?
+*first* state, but it doesn't have a *last* state. This property looks odd,
+but it is practical because it makes it so that temporal formulas are always
+valid: if we didn't have infinite traces, what would the expression `x'` even
+refer to in the last state?
 
 You normally don't have to worry about lassos, as long as you make sure that
-your model doesn't get "stuck": if there's nothing interesting progress to make
-in your model anymore, you at least have to model that the next state is equal
-to the previous state, forever.
+your model reverts to an older state within the 10 time steps: if there's
+nothing interesting progress to make in your model anymore, you have to model
+that the next state is equal to the previous state. And if your model keeps on
+changing for more than 10 time steps without folding back on itself, *it will
+just not count as a valid trace and it will be ignored*!.
 
-The visualizer has the following buttons you can use to explore the models
+The visualizer has the following buttons you can use to explore the traces
 you are generating:
 
-- **New config**: pick a new configuration of (counts of) immutable objects
-- **New init**: pick a new initial configuration
-- **New trace**: pick a new trace with the same starting configuration
-- **New fork**: pick a different possible transition from the current time step
+- **New config**: pick a new arbitrary configuration of (counts of) immutable objects
+- **New init**: with the same objects, pick a new arbitrary configuration
+- **New trace**: with the same starting configuration, pick an arbitrary new trace
+- **New fork**: from the current time step, pick a different possible transition
 
 ## Things that don't change
 
 In the model we just checked, there was one traffic light and we said that the
-traffic light had to make progress in every step (or in fact, what we said was
-"exactly one traffic light makes progress in every step", and since there is
-only one traffic light that means the one we have has to make progress).
+traffic light had to make progress in every step.
 
-Sometimes we want a bit more arbitrary behavior: in every time
-step, perhaps the traffic light changes state or it doesn't.
+> Or in fact, what we said was "exactly one traffic light makes progress in
+every step", and since there is only one traffic light that means the one we
+have has to make progress.
+
+Sometimes we want a bit more arbitrary behavior (to model unpredictable things
+like latency and pre-emption): in every time step, perhaps the traffic light
+changes state or it doesn't.
 
 ```admonish tip title="Exercise"
 Change `always one t: TrafficLight` to `always lone t:
 TrafficLight`, to say that the traffic light either changes state or
 doesn't. Run the model again. Does the output look the same as what you
-saw before? Click **new trace** a couple of times to explore different
-traces. How long are the traces?
+saw before?
+
+Click **new trace** a couple of times to explore different traces. How long are
+the traces?
 ```
 
 ### Forcing interesting states
@@ -118,7 +127,7 @@ The first thing you might notice is that the traces are all of a sudden a lot
 shorter. The trace of the first model was always 3 steps long, but now you might
 find traces of 2 or even 1 step, and then it stops. Why does this happen?
 
-Remeber that Alloy tries to find *any trace* that satisfies the model and can
+Remember that Alloy tries to find *any trace* that satisfies the model and can
 form a *lasso*. In the system where the traffic light starts at green and it has
 to make a change at every time step, the only way to form a lasso is to go
 through all states in 3 steps.
@@ -134,8 +143,10 @@ ask for them explicitly.
 ```admonish tip title="Exercise"
 Modify the `run` statement above and add a condition to make sure
 that the trace will include a state of where the traffic light is red. You will
-need to use a temporal keyword for this. Run the model. Does the light turn red?
-If the behavior seems to ignore the specification, don't worry about that just yet.
+need to use a temporal keyword for this.
+
+Run the model. Does the light turn red?  If the behavior seems to ignore the
+specification, don't worry about that just yet.
 ```
 
 ### Frame conditions
@@ -186,7 +197,7 @@ for `2`. Is the way you wrote your frame condition still correct if there is
 more than one traffic light?
 ```
 
-Frame conditions can be written in a couple of different styles. Here are
+Frame conditions can be written in a variety of different styles. Here are
 a couple of possible conditions you could have used:
 
 ```alloy
