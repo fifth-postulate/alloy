@@ -17,7 +17,7 @@
 * [Exploring the analyzer](#)
 
 # Analyzing structure and operations
-* [An Address Book with aliases](#)
+* [Maintaining invariants in an address book](./structure/address-book.md)
 
 # Time
 * [Alloy and Time](./time/alloy-and-time.md)
