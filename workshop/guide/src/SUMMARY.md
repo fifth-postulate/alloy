@@ -24,8 +24,8 @@
 * [Alloy and Time](./time/alloy-and-time.md)
 * [Challenge Fourteen](./time/challenge-fourteen.md)
 * [The e.dentifier](./time/edentifier.md)
-* [Incrementing a register](#)
-* [Another way to write Frame Conditions](#)
+* [Incrementing a register](./time/increment.md)
+* [Another way to write Frame Conditions](./time/frame.md)
 
 # Appendices
 * [Sources](./appendix/sources.md)
