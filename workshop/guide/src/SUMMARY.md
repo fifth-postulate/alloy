@@ -15,7 +15,7 @@
 
 # Alloy
 * [First Steps](./alloy/first-steps.md)
-* [Exploring the analyzer](#)
+* [Exploring the analyzer](./alloy/exploring.md)
 
 # Analyzing structure and operations
 * [Maintaining invariants in an address book](./structure/address-book.md)
