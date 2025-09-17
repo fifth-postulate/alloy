@@ -11,6 +11,7 @@
 # Prelimenaries
 * [Relations](./prelimenaries/relations.md)
 * [Arity](./prelimenaries/arity.md)
+* [Characteristics](./prelimenaries/characteristics.md)
 
 # Alloy
 * [First Steps](./alloy/first-steps.md)
